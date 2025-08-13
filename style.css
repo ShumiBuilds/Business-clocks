@@ -1,0 +1,110 @@
+:root { color-scheme: light dark; }
+* { box-sizing: border-box; }
+body { margin: 0; font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif; }
+header, footer { padding: 12px 16px; border-bottom: 1px solid #ddd2; }
+footer { border-top: 1px solid #ddd2; border-bottom: 0; text-align: center; font-size: 12px; color: #666; }
+h1 { margin: 0 0 4px; font-size: 18px; }
+.sub { margin: 0; color: #666; font-size: 13px; }
+main { padding: 16px; }
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+}
+.clock {
+  border: 1px solid #ddd2;
+  border-radius: 16px;
+  padding: 20px;
+  text-align: center;
+}
+.city { font-weight: 600; font-size: 16px; margin-bottom: 4px; }
+.meta { font-size: 12px; color: #666; margin-bottom: 16px; }
+.clock-face {
+  width: 200px;
+  height: 200px;
+  border: 3px solid #ddd2;
+  border-radius: 50%;
+  margin: 0 auto 16px;
+  position: relative;
+  background: #fff;
+}
+.clock-face.dark {
+  background: #1a1a1a;
+  border-color: #444;
+}
+.hour-mark {
+  position: absolute;
+  width: 2px;
+  height: 12px;
+  background: #666;
+  left: 50%;
+  transform: translateX(-50%);
+}
+.hour-mark.dark {
+  background: #aaa;
+}
+.hour-hand, .minute-hand, .second-hand {
+  position: absolute;
+  left: 50%;
+  bottom: 50%;
+  transform-origin: 50% 100%;
+  border-radius: 2px;
+}
+.hour-hand {
+  width: 4px;
+  height: 60px;
+  background: #333;
+  margin-left: -2px;
+}
+.hour-hand.dark {
+  background: #fff;
+}
+.minute-hand {
+  width: 3px;
+  height: 80px;
+  background: #666;
+  margin-left: -1.5px;
+}
+.minute-hand.dark {
+  background: #ccc;
+}
+.second-hand {
+  width: 2px;
+  height: 90px;
+  background: #e74c3c;
+  margin-left: -1px;
+}
+.center-dot {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  background: #333;
+  border-radius: 50%;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+.center-dot.dark {
+  background: #fff;
+}
+.digital-time {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 8px;
+}
+.digital-time.dark {
+  color: #aaa;
+}
+.date { font-size: 12px; color: #666; }
+.date.dark {
+  color: #aaa;
+}
+.row { display: flex; justify-content: space-between; align-items: baseline; }
+.badge { font-size: 11px; padding: 2px 6px; border: 1px solid #ddd2; border-radius: 999px; }
+.controls { margin: 8px 0 0; display: flex; gap: 8px; flex-wrap: wrap; }
+button {
+  font: inherit; padding: 6px 10px; border-radius: 8px; border: 1px solid #ddd2; cursor: pointer; background: transparent;
+}
+button.active { background: #000; color: #fff; border-color: #000; }
+button.active.dark { background: #fff; color: #000; border-color: #fff; }
