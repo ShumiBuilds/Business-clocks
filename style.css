@@ -103,6 +103,13 @@ main { padding: 16px; }
 .clock-face.digital-mode .second-hand,
 .clock-face.digital-mode .center-dot,
 .clock-face.digital-mode .hour-mark {
+  display: none !important;
+}
+
+/* Hide extra text elements in digital mode */
+.clock-face.digital-mode ~ .digital-time,
+.clock-face.digital-mode ~ .date,
+.clock-face.digital-mode ~ .badge {
   display: none;
 }
 
@@ -110,19 +117,26 @@ main { padding: 16px; }
   display: flex;
   align-items: center;
   justify-content: center;
-  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-family: 'Courier New', 'Courier', monospace;
   font-size: 48px;
-  font-weight: bold;
-  color: #333;
-  background: #f8f9fa;
-  border: 3px solid #ddd2;
+  font-weight: 900;
+  color: #00ff00;
+  background: #000;
+  border: 4px solid #333;
+  border-radius: 8px;
+  box-shadow: inset 0 0 20px rgba(0, 255, 0, 0.3);
+  width: 220px;
+  height: 120px;
 }
 
 .clock-face.digital-mode.dark {
-  background: #2d3748;
-  color: #fff;
-  border-color: #444;
+  background: #000;
+  color: #00ff00;
+  border-color: #555;
+  box-shadow: inset 0 0 20px rgba(0, 255, 0, 0.3);
 }
+
+
 .date { font-size: 12px; color: #666; }
 .date.dark {
   color: #aaa;

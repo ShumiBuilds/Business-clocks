@@ -20,16 +20,12 @@ CITIES.forEach((c, i) => {
   card.className = "clock";
   card.innerHTML = `
     <div class="city">${c.name}</div>
-    <div class="meta">${c.tz}${c.note ? " • " + c.note : ""}</div>
     <div class="clock-face" id="face-${i}">
       <div class="center-dot"></div>
       <div class="hour-hand" id="hour-${i}"></div>
       <div class="minute-hand" id="minute-${i}"></div>
       <div class="second-hand" id="second-${i}"></div>
     </div>
-    <div class="digital-time" id="digital-${i}">--:--:--</div>
-    <div class="date" id="date-${i}">—</div>
-    <div class="badge" id="offset-${i}"></div>
   `;
   container.appendChild(card);
   
@@ -50,7 +46,34 @@ CITIES.forEach((c, i) => {
   
   // Add click functionality to toggle between analog and digital
   face.addEventListener("click", () => {
-    face.classList.toggle("digital-mode");
+    const isDigital = face.classList.contains("digital-mode");
+    if (isDigital) {
+      // Switch back to analog mode
+      face.classList.remove("digital-mode");
+      // Restore the clock elements
+      face.innerHTML = `
+        <div class="center-dot"></div>
+        <div class="hour-hand" id="hour-${i}"></div>
+        <div class="minute-hand" id="minute-${i}"></div>
+        <div class="second-hand" id="second-${i}"></div>
+      `;
+      // Re-add hour marks
+      for (let h = 1; h <= 12; h++) {
+        const mark = document.createElement("div");
+        mark.className = "hour-mark";
+        const angle = (h * 30) - 90;
+        const radius = 85;
+        const x = radius * Math.cos(angle * Math.PI / 180);
+        const y = radius * Math.sin(angle * Math.PI / 180);
+        mark.style.left = `calc(50% + ${x}px)`;
+        mark.style.top = `calc(50% + ${y}px)`;
+        mark.style.transform = `translate(-50%, -50%) rotate(${angle + 90}deg)`;
+        face.appendChild(mark);
+      }
+    } else {
+      // Switch to digital mode
+      face.classList.add("digital-mode");
+    }
   });
 });
 
@@ -61,37 +84,9 @@ function fmtTime(d, tz) {
   }).format(d);
 }
 
-function fmtDate(d, tz) {
-  return new Intl.DateTimeFormat([], {
-    weekday: "short", year: "numeric", month: "short", day: "2-digit",
-    timeZone: tz
-  }).format(d);
-}
 
-// Compute UTC offset label like UTC+2 / UTC-5:30
-function tzOffsetLabel(tz) {
-  const d = new Date();
-  const fmt = new Intl.DateTimeFormat("en-US", {
-    timeZone: tz, hour12: false, hour: "2-digit", minute: "2-digit"
-  });
-  const partsLocal = fmt.formatToParts(d);
-  const hmLocal = partsLocal.reduce((a,p)=> (p.type==="hour"||p.type==="minute")? a+p.value.padStart(2,"0")+ (p.type==="hour"?":":"") : a, "");
-  const [hStr, mStr] = hmLocal.split(":");
-  const now = Date.now();
-  const utc = new Date(now);
-  const asUTC = new Intl.DateTimeFormat([], { timeZone: "UTC", hour: "2-digit", minute: "2-digit", hour12: false }).format(utc);
-  const asTZ  = new Intl.DateTimeFormat([], { timeZone: tz,     hour: "2-digit", minute: "2-digit", hour12: false }).format(utc);
-  const [uh, um] = asUTC.split(":").map(Number);
-  const [th, tm] = asTZ.split(":").map(Number);
-  let minutes = (th*60 + tm) - (uh*60 + um);
-  if (minutes <= -720) minutes += 1440;
-  if (minutes >   720) minutes -= 1440;
-  const sign = minutes >= 0 ? "+" : "−";
-  minutes = Math.abs(minutes);
-  const hh = Math.floor(minutes/60).toString();
-  const mm = (minutes%60).toString().padStart(2,"0");
-  return `UTC${sign}${hh}${mm==="00" ? "" : ":"+mm}`;
-}
+
+
 
 function tick() {
   const now = new Date();
@@ -115,20 +110,22 @@ function tick() {
     const minuteAngle = minutes * 6; // 6 degrees per minute
     const secondAngle = seconds * 6; // 6 degrees per minute
     
-    // Update clock hands
-    document.getElementById(`hour-${i}`).style.transform = `rotate(${hourAngle}deg)`;
-    document.getElementById(`minute-${i}`).style.transform = `rotate(${minuteAngle}deg)`;
-    document.getElementById(`second-${i}`).style.transform = `rotate(${secondAngle}deg)`;
-    
-    // Update digital time and date
-    document.getElementById(`digital-${i}`).textContent = fmtTime(now, c.tz);
-    document.getElementById(`date-${i}`).textContent = fmtDate(now, c.tz);
-    document.getElementById(`offset-${i}`).textContent = tzOffsetLabel(c.tz);
-    
     // Update digital mode display if active
     const clockFace = document.getElementById(`face-${i}`);
     if (clockFace.classList.contains("digital-mode")) {
+      // Show simple digital time
       clockFace.textContent = fmtTime(now, c.tz);
+    } else {
+      // Make sure analog clock hands exist before updating them
+      const hourHand = document.getElementById(`hour-${i}`);
+      const minuteHand = document.getElementById(`minute-${i}`);
+      const secondHand = document.getElementById(`second-${i}`);
+      
+      if (hourHand && minuteHand && secondHand) {
+        hourHand.style.transform = `rotate(${hourAngle}deg)`;
+        minuteHand.style.transform = `rotate(${minuteAngle}deg)`;
+        secondHand.style.transform = `rotate(${secondAngle}deg)`;
+      }
     }
   });
 }
