@@ -47,6 +47,11 @@ CITIES.forEach((c, i) => {
     mark.style.transform = `translate(-50%, -50%) rotate(${angle + 90}deg)`;
     face.appendChild(mark);
   }
+  
+  // Add click functionality to change clock color
+  face.addEventListener("click", () => {
+    face.classList.toggle("white");
+  });
 });
 
 function fmtTime(d, tz) {

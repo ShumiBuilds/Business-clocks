@@ -27,10 +27,18 @@ main { padding: 16px; }
   margin: 0 auto 16px;
   position: relative;
   background: #fff;
+  cursor: pointer;
+  transition: all 0.3s ease;
 }
 .clock-face.dark {
   background: #1a1a1a;
   border-color: #444;
+}
+
+.clock-face.white {
+  background: #ffffff;
+  border-color: #333;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
 }
 .hour-mark {
   position: absolute;
