@@ -48,9 +48,9 @@ CITIES.forEach((c, i) => {
     face.appendChild(mark);
   }
   
-  // Add click functionality to change clock color
+  // Add click functionality to toggle between analog and digital
   face.addEventListener("click", () => {
-    face.classList.toggle("white");
+    face.classList.toggle("digital-mode");
   });
 });
 
@@ -124,6 +124,12 @@ function tick() {
     document.getElementById(`digital-${i}`).textContent = fmtTime(now, c.tz);
     document.getElementById(`date-${i}`).textContent = fmtDate(now, c.tz);
     document.getElementById(`offset-${i}`).textContent = tzOffsetLabel(c.tz);
+    
+    // Update digital mode display if active
+    const clockFace = document.getElementById(`face-${i}`);
+    if (clockFace.classList.contains("digital-mode")) {
+      clockFace.textContent = fmtTime(now, c.tz);
+    }
   });
 }
 
